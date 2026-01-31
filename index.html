@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IT-Dokumentation Suite</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-icon">IT</span>
+          <div>
+            <h1>Dokumentation</h1>
+            <p>Netzwerk & Assets</p>
+          </div>
+        </div>
+        <nav class="nav">
+          <button class="nav-item active" data-page="dashboard">Übersicht</button>
+          <button class="nav-item" data-page="kunden">Kunden</button>
+          <button class="nav-item" data-page="standorte">Standorte</button>
+          <button class="nav-item" data-page="netzwerk">Netzwerk & Switchports</button>
+          <button class="nav-item" data-page="geraete">Geräte & Hardware</button>
+          <button class="nav-item" data-page="software">Software & Lizenzen</button>
+          <button class="nav-item" data-page="zugang">Admin-Zugänge</button>
+          <button class="nav-item" data-page="rollen">Rollen & Techniker</button>
+        </nav>
+        <div class="sidebar-footer">
+          <p>Lokaler Speicher aktiv</p>
+        </div>
+      </aside>
+
+      <div class="content">
+        <header class="topbar">
+          <div>
+            <h2>IT-Dokumentationssuite</h2>
+            <p>Ein zentrales System für Kunden, Infrastruktur und Zugänge.</p>
+          </div>
+          <div class="search">
+            <input id="global-search" type="search" placeholder="Suche nach Geräten, IPs, Kunden" />
+            <span class="tag">Ctrl + K</span>
+          </div>
+        </header>
+
+        <main>
+          <section class="page active" id="dashboard">
+            <div class="page-header">
+              <h3>Übersicht</h3>
+              <p>Live-Status der wichtigsten Bereiche.</p>
+            </div>
+            <div class="stats-grid">
+              <article class="stat-card">
+                <h4>Kunden</h4>
+                <p id="stat-customers">0</p>
+                <span>aktive Mandanten</span>
+              </article>
+              <article class="stat-card">
+                <h4>Standorte</h4>
+                <p id="stat-sites">0</p>
+                <span>Rechenzentren & Büros</span>
+              </article>
+              <article class="stat-card">
+                <h4>Geräte</h4>
+                <p id="stat-devices">0</p>
+                <span>inventarisierte Assets</span>
+              </article>
+              <article class="stat-card">
+                <h4>Switchports</h4>
+                <p id="stat-ports">0</p>
+                <span>belegte Ports</span>
+              </article>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h4>Offene Aufgaben</h4>
+                <p>Empfohlene nächste Schritte für deine Dokumentation.</p>
+              </div>
+              <ul class="checklist">
+                <li>Prüfe unzugeordnete Geräte und ergänze Standorte.</li>
+                <li>Weise Switchports zu, um Netzwerkpfade vollständig zu dokumentieren.</li>
+                <li>Hinterlege Rollen und Technikerzugänge für Audit-Logs.</li>
+                <li>Ergänze Softwarelizenzen und Wartungsdaten.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="page" id="kunden">
+            <div class="page-header">
+              <h3>Kundenverwaltung</h3>
+              <p>Mandanten, Ansprechpartner und Service-Level dokumentieren.</p>
+            </div>
+            <div class="card">
+              <form id="customer-form" class="form-grid">
+                <label>
+                  Firmenname
+                  <input type="text" name="name" required />
+                </label>
+                <label>
+                  Ansprechpartner
+                  <input type="text" name="contact" />
+                </label>
+                <label>
+                  SLA / Hinweis
+                  <input type="text" name="note" />
+                </label>
+                <label>
+                  Vertrags-ID
+                  <input type="text" name="contract" placeholder="z. B. SLA-2024-01" />
+                </label>
+                <button type="submit">Kunde hinzufügen</button>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Kontakt</th>
+                      <th>Hinweis</th>
+                      <th>Vertrag</th>
+                    </tr>
+                  </thead>
+                  <tbody id="customer-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="standorte">
+            <div class="page-header">
+              <h3>Standorte</h3>
+              <p>Büros, Rechenzentren, Serverräume je Kunde.</p>
+            </div>
+            <div class="card">
+              <form id="site-form" class="form-grid">
+                <label>
+                  Standortname
+                  <input type="text" name="name" required />
+                </label>
+                <label>
+                  Adresse
+                  <input type="text" name="address" required />
+                </label>
+                <label>
+                  Kunde
+                  <select name="customer" required></select>
+                </label>
+                <label>
+                  Kontakt vor Ort
+                  <input type="text" name="contact" />
+                </label>
+                <button type="submit">Standort hinzufügen</button>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Standort</th>
+                      <th>Adresse</th>
+                      <th>Kunde</th>
+                      <th>Kontakt</th>
+                    </tr>
+                  </thead>
+                  <tbody id="site-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="netzwerk">
+            <div class="page-header">
+              <h3>Netzwerk & Switchports</h3>
+              <p>Switches, VLANs und Zuordnungen.</p>
+            </div>
+            <div class="split-grid">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Switches</h4>
+                  <p>Erfasse Switche mit Standort und Portanzahl.</p>
+                </div>
+                <form id="switch-form" class="form-grid">
+                  <label>
+                    Name
+                    <input type="text" name="name" required />
+                  </label>
+                  <label>
+                    Standort
+                    <select name="site" required></select>
+                  </label>
+                  <label>
+                    Ports
+                    <input type="number" name="ports" min="1" value="24" required />
+                  </label>
+                  <label>
+                    Management-IP
+                    <input type="text" name="ip" placeholder="10.0.0.2" />
+                  </label>
+                  <button type="submit">Switch hinzufügen</button>
+                </form>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Standort</th>
+                        <th>Ports</th>
+                        <th>IP</th>
+                      </tr>
+                    </thead>
+                    <tbody id="switch-table"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h4>Switchport-Zuordnung</h4>
+                  <p>Verknüpfe Geräte und Ports.</p>
+                </div>
+                <form id="port-link-form" class="form-grid">
+                  <label>
+                    Switch
+                    <select name="switch" required></select>
+                  </label>
+                  <label>
+                    Port
+                    <input type="text" name="port" placeholder="Gi1/0/24" required />
+                  </label>
+                  <label>
+                    Gerät
+                    <select name="device" required></select>
+                  </label>
+                  <label>
+                    VLAN
+                    <input type="text" name="vlan" placeholder="VLAN 20" />
+                  </label>
+                  <button type="submit">Zuordnung speichern</button>
+                </form>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Switch</th>
+                        <th>Port</th>
+                        <th>VLAN</th>
+                        <th>Gerät</th>
+                      </tr>
+                    </thead>
+                    <tbody id="port-link-table"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h4>Netzwerksegmente</h4>
+                <p>Subnetze und IP-Bereiche pro Kunde.</p>
+              </div>
+              <form id="segment-form" class="form-grid">
+                <label>
+                  Segmentname
+                  <input type="text" name="name" required />
+                </label>
+                <label>
+                  CIDR / Range
+                  <input type="text" name="range" placeholder="10.10.0.0/24" required />
+                </label>
+                <label>
+                  Kunde
+                  <select name="customer" required></select>
+                </label>
+                <label>
+                  Zweck
+                  <input type="text" name="purpose" placeholder="z. B. VoIP" />
+                </label>
+                <button type="submit">Segment hinzufügen</button>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Range</th>
+                      <th>Kunde</th>
+                      <th>Zweck</th>
+                    </tr>
+                  </thead>
+                  <tbody id="segment-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="geraete">
+            <div class="page-header">
+              <h3>Geräte & Hardware</h3>
+              <p>Server, Clients, Firewalls und Inventar pro Standort.</p>
+            </div>
+            <div class="card">
+              <form id="device-form" class="form-grid">
+                <label>
+                  Gerätename
+                  <input type="text" name="name" required />
+                </label>
+                <label>
+                  Typ
+                  <input type="text" name="type" placeholder="Firewall, Server, NAS" required />
+                </label>
+                <label>
+                  Kunde
+                  <select name="customer" required></select>
+                </label>
+                <label>
+                  Standort
+                  <select name="site" required></select>
+                </label>
+                <label>
+                  Management-IP
+                  <input type="text" name="ip" placeholder="192.168.1.10" />
+                </label>
+                <label>
+                  Seriennummer
+                  <input type="text" name="serial" />
+                </label>
+                <label class="full">
+                  Notizen
+                  <textarea name="notes" rows="2"></textarea>
+                </label>
+                <button type="submit">Gerät hinzufügen</button>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Typ</th>
+                      <th>Kunde</th>
+                      <th>Standort</th>
+                      <th>IP</th>
+                      <th>Switchport</th>
+                    </tr>
+                  </thead>
+                  <tbody id="device-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="software">
+            <div class="page-header">
+              <h3>Software & Lizenzen</h3>
+              <p>Installierte Software pro Gerät und Lizenzlaufzeiten.</p>
+            </div>
+            <div class="card">
+              <form id="software-form" class="form-grid">
+                <label>
+                  Software
+                  <input type="text" name="name" required />
+                </label>
+                <label>
+                  Version
+                  <input type="text" name="version" />
+                </label>
+                <label>
+                  Gerät
+                  <select name="device" required></select>
+                </label>
+                <label>
+                  Lizenztyp
+                  <input type="text" name="license" placeholder="z. B. Subscription" />
+                </label>
+                <label>
+                  Ablaufdatum
+                  <input type="date" name="expires" />
+                </label>
+                <button type="submit">Software hinzufügen</button>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Software</th>
+                      <th>Version</th>
+                      <th>Gerät</th>
+                      <th>Lizenz</th>
+                      <th>Ablauf</th>
+                    </tr>
+                  </thead>
+                  <tbody id="software-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="zugang">
+            <div class="page-header">
+              <h3>Admin-Zugangsdaten</h3>
+              <p>Zentrale Verwaltung lokaler Admin-Zugänge (nur lokal gespeichert).</p>
+            </div>
+            <div class="card">
+              <form id="credential-form" class="form-grid">
+                <label>
+                  Gerät
+                  <select name="device" required></select>
+                </label>
+                <label>
+                  Benutzername
+                  <input type="text" name="username" required />
+                </label>
+                <label>
+                  Passwort
+                  <input type="password" name="password" required />
+                </label>
+                <label>
+                  Ablaufdatum
+                  <input type="date" name="rotation" />
+                </label>
+                <label class="full">
+                  Hinweis
+                  <textarea name="notes" rows="2" placeholder="z. B. MFA aktiviert"></textarea>
+                </label>
+                <button type="submit">Zugang hinzufügen</button>
+              </form>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Gerät</th>
+                      <th>Benutzername</th>
+                      <th>Passwort</th>
+                      <th>Rotation</th>
+                      <th>Hinweis</th>
+                    </tr>
+                  </thead>
+                  <tbody id="credential-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="rollen">
+            <div class="page-header">
+              <h3>Rollen & Techniker</h3>
+              <p>Rollenbasierte Zugriffe für IT-Teams.</p>
+            </div>
+            <div class="split-grid">
+              <div class="card">
+                <div class="card-header">
+                  <h4>Rollen</h4>
+                </div>
+                <form id="role-form" class="form-grid">
+                  <label>
+                    Rollenname
+                    <input type="text" name="name" required />
+                  </label>
+                  <label class="full">
+                    Berechtigungen
+                    <textarea name="permissions" rows="2" placeholder="z. B. Lesen, Schreiben"></textarea>
+                  </label>
+                  <button type="submit">Rolle hinzufügen</button>
+                </form>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Rolle</th>
+                        <th>Berechtigungen</th>
+                      </tr>
+                    </thead>
+                    <tbody id="role-table"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h4>Techniker</h4>
+                </div>
+                <form id="technician-form" class="form-grid">
+                  <label>
+                    Name
+                    <input type="text" name="name" required />
+                  </label>
+                  <label>
+                    E-Mail
+                    <input type="email" name="email" required />
+                  </label>
+                  <label>
+                    Rolle
+                    <select name="role" required></select>
+                  </label>
+                  <label>
+                    Primär-Kunde
+                    <select name="customer" required></select>
+                  </label>
+                  <button type="submit">Techniker hinzufügen</button>
+                </form>
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>E-Mail</th>
+                        <th>Rolle</th>
+                        <th>Kunde</th>
+                      </tr>
+                    </thead>
+                    <tbody id="technician-table"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
