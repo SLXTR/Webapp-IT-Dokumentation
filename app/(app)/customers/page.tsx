@@ -5,6 +5,7 @@ export default async function CustomersPage() {
   const customers = await prisma.customer.findMany({
     orderBy: { createdAt: "desc" }
   });
+  type CustomerListItem = Awaited<typeof customers>[number];
 
   return (
     <div className="space-y-6">
@@ -16,7 +17,7 @@ export default async function CustomersPage() {
         <button className="rounded-lg bg-black text-white px-4 py-2 text-sm">Kunde anlegen</button>
       </header>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {customers.map((customer) => (
+        {customers.map((customer: CustomerListItem) => (
           <Link
             key={customer.id}
             href={`/customers/${customer.id}`}

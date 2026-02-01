@@ -19,6 +19,8 @@ export default async function SwitchDetailPage({
       }
     }
   });
+  type SwitchWithPorts = NonNullable<typeof switchItem>;
+  type SwitchPort = SwitchWithPorts["ports"][number];
 
   if (!switchItem) {
     return <div className="notion-card p-6">Switch nicht gefunden.</div>;
@@ -33,7 +35,7 @@ export default async function SwitchDetailPage({
       <div className="notion-card p-6">
         <h2 className="text-lg font-semibold">Port-Grid</h2>
         <div className="grid grid-cols-6 gap-3 mt-4">
-          {switchItem.ports.map((port) => {
+          {switchItem.ports.map((port: SwitchPort) => {
             const linkedDevice = port.portLink?.device;
             return (
               <div

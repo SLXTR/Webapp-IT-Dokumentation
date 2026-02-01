@@ -113,7 +113,7 @@ export default function SetupPage() {
       <section className="notion-card p-6">
         <h2 className="text-lg font-semibold">Setup-Log</h2>
         <div className="mt-3 text-xs text-neutral-500 space-y-1">
-          {log.map((entry, index) => (
+          {log.map((entry: string, index: number) => (
             <div key={index}>{entry}</div>
           ))}
         </div>

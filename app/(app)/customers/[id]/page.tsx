@@ -13,6 +13,9 @@ export default async function CustomerDetailPage({
       devices: true
     }
   });
+  type CustomerWithAssets = NonNullable<typeof customer>;
+  type CustomerSwitch = CustomerWithAssets["switches"][number];
+  type CustomerDevice = CustomerWithAssets["devices"][number];
 
   if (!customer) {
     return <div className="notion-card p-6">Kunde nicht gefunden.</div>;
@@ -35,7 +38,7 @@ export default async function CustomerDetailPage({
         <div className="notion-card p-5">
           <h2 className="text-lg font-semibold">Switches</h2>
           <div className="mt-3 space-y-2">
-            {customer.switches.map((switchItem) => (
+            {customer.switches.map((switchItem: CustomerSwitch) => (
               <Link
                 key={switchItem.id}
                 href={`/customers/${customer.id}/switches/${switchItem.id}`}
@@ -53,7 +56,7 @@ export default async function CustomerDetailPage({
         <div className="notion-card p-5">
           <h2 className="text-lg font-semibold">Geräte</h2>
           <div className="mt-3 space-y-2">
-            {customer.devices.map((device) => (
+            {customer.devices.map((device: CustomerDevice) => (
               <Link
                 key={device.id}
                 href={`/customers/${customer.id}/devices/${device.id}`}

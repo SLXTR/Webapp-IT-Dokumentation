@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getUserRole } from "@/lib/guards";
 import { canWrite } from "@/lib/rbac";
@@ -14,11 +15,14 @@ export async function POST(
 
   const body = await request.json();
   const count = Number(body.count ?? 24);
-  const ports = Array.from({ length: count }).map((_, index) => ({
-    switchId: params.switchId,
-    portNumber: String(index + 1),
-    poeCapable: index < Math.ceil(count / 2)
-  }));
+  const ports: Prisma.SwitchPortCreateManyInput[] = Array.from(
+    { length: count },
+    (_value, index): Prisma.SwitchPortCreateManyInput => ({
+      switchId: params.switchId,
+      portNumber: String(index + 1),
+      poeCapable: index < Math.ceil(count / 2)
+    })
+  );
 
   await prisma.switchPort.createMany({
     data: ports,

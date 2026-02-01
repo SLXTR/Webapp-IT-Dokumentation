@@ -8,6 +8,14 @@ export default async function DashboardPage() {
     prisma.customer.count()
   ]);
 
+  const stats = [
+    { label: "Kunden", value: customerCount },
+    { label: "Geräte", value: deviceCount },
+    { label: "Switches", value: switchCount },
+    { label: "Ports", value: portCount }
+  ];
+  type StatItem = (typeof stats)[number];
+
   return (
     <div className="space-y-6">
       <header>
@@ -15,12 +23,7 @@ export default async function DashboardPage() {
         <p className="text-neutral-500">Überblick über alle Workspaces.</p>
       </header>
       <section className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {[
-          { label: "Kunden", value: customerCount },
-          { label: "Geräte", value: deviceCount },
-          { label: "Switches", value: switchCount },
-          { label: "Ports", value: portCount }
-        ].map((item) => (
+        {stats.map((item: StatItem) => (
           <div key={item.label} className="notion-card p-4">
             <p className="text-xs uppercase tracking-wide text-neutral-500">{item.label}</p>
             <p className="text-2xl font-semibold mt-2">{item.value}</p>
