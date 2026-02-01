@@ -1,10 +1,7 @@
-import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminPage() {
-  const users: Prisma.UserGetPayload<{
-    include: { roles: { include: { customer: true } } };
-  }>[] = await prisma.user.findMany({
+  const users = await prisma.user.findMany({
     include: { roles: { include: { customer: true } } }
   });
 
