@@ -1,0 +1,208 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  CUSTOMER_ADMIN
+  TECHNICIAN
+  READ_ONLY
+}
+
+enum DeviceType {
+  SERVER
+  CLIENT
+  PRINTER
+  NAS
+  FIREWALL
+  AP
+  CAMERA
+  OTHER
+}
+
+enum SwitchPortStatus {
+  FREE
+  OCCUPIED
+  DISABLED
+  TRUNK
+  ACCESS
+}
+
+model User {
+  id           String              @id @default(uuid())
+  email        String              @unique
+  passwordHash String              @map("password_hash")
+  name         String?
+  isActive     Boolean             @default(true) @map("is_active")
+  isSuperAdmin Boolean             @default(false) @map("is_super_admin")
+  createdAt    DateTime            @default(now()) @map("created_at")
+  roles        UserCustomerRole[]
+  auditLogs    AuditLog[]
+}
+
+model Customer {
+  id        String              @id @default(uuid())
+  name      String
+  notes     String?
+  createdAt DateTime            @default(now()) @map("created_at")
+  roles     UserCustomerRole[]
+  devices   Device[]
+  switches  Switch[]
+  locations Location[]
+  vlans     Vlan[]
+  pages     Page[]
+  todos     Todo[]
+  auditLogs AuditLog[]
+  portLinks PortLink[]
+}
+
+model UserCustomerRole {
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  customerId String   @map("customer_id")
+  role       Role
+  createdAt  DateTime @default(now()) @map("created_at")
+  user       User     @relation(fields: [userId], references: [id])
+  customer   Customer @relation(fields: [customerId], references: [id])
+
+  @@unique([userId, customerId])
+}
+
+model Device {
+  id         String     @id @default(uuid())
+  customerId String     @map("customer_id")
+  name       String
+  type       DeviceType
+  vendor     String?
+  model      String?
+  serial     String?
+  hostname   String?
+  ip         String?
+  mac        String?
+  locationId String?    @map("location_id")
+  notes      String?
+  tags       Json?
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  location   Location?  @relation(fields: [locationId], references: [id])
+  portLinks  PortLink[]
+}
+
+model Switch {
+  id         String       @id @default(uuid())
+  customerId String       @map("customer_id")
+  name       String
+  vendor     String?
+  model      String?
+  mgmtIp     String?      @map("mgmt_ip")
+  locationId String?      @map("location_id")
+  notes      String?
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  customer   Customer     @relation(fields: [customerId], references: [id])
+  location   Location?    @relation(fields: [locationId], references: [id])
+  ports      SwitchPort[]
+}
+
+model SwitchPort {
+  id         String            @id @default(uuid())
+  switchId   String            @map("switch_id")
+  portNumber String            @map("port_number")
+  label      String?
+  poeCapable Boolean           @default(false) @map("poe_capable")
+  status     SwitchPortStatus  @default(FREE)
+  vlanId     String?           @map("vlan_id")
+  speed      String?
+  createdAt  DateTime          @default(now()) @map("created_at")
+  updatedAt  DateTime          @updatedAt @map("updated_at")
+  switch     Switch            @relation(fields: [switchId], references: [id])
+  vlan       Vlan?             @relation(fields: [vlanId], references: [id])
+  portLink   PortLink?
+
+  @@unique([switchId, portNumber])
+}
+
+model PortLink {
+  id           String     @id @default(uuid())
+  customerId   String     @map("customer_id")
+  switchPortId String     @unique @map("switch_port_id")
+  deviceId     String?    @map("device_id")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  customer     Customer   @relation(fields: [customerId], references: [id])
+  switchPort   SwitchPort @relation(fields: [switchPortId], references: [id])
+  device       Device?    @relation(fields: [deviceId], references: [id])
+
+  @@index([deviceId])
+}
+
+model Location {
+  id         String     @id @default(uuid())
+  customerId String     @map("customer_id")
+  name       String
+  parentId   String?    @map("parent_id")
+  notes      String?
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  parent     Location?  @relation("LocationHierarchy", fields: [parentId], references: [id])
+  children   Location[] @relation("LocationHierarchy")
+  devices    Device[]
+  switches   Switch[]
+}
+
+model Vlan {
+  id         String     @id @default(uuid())
+  customerId String     @map("customer_id")
+  vlanNumber Int        @map("vlan_number")
+  name       String
+  notes      String?
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  ports      SwitchPort[]
+
+  @@unique([customerId, vlanNumber])
+}
+
+model Page {
+  id         String   @id @default(uuid())
+  customerId String   @map("customer_id")
+  title      String
+  content    Json
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  customer   Customer @relation(fields: [customerId], references: [id])
+}
+
+model Todo {
+  id             String   @id @default(uuid())
+  customerId     String   @map("customer_id")
+  title          String
+  done           Boolean  @default(false)
+  dueDate        DateTime? @map("due_date")
+  assignedUserId String?  @map("assigned_user_id")
+  customer       Customer @relation(fields: [customerId], references: [id])
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  customerId String?  @map("customer_id")
+  userId     String?  @map("user_id")
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  meta       Json?
+  createdAt  DateTime @default(now()) @map("created_at")
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  user       User?     @relation(fields: [userId], references: [id])
+}
+
+model SystemSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
