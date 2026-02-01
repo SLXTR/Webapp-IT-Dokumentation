@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isInitialized, getSetupToken } from "../../../../lib/setup";
+import { isInitialized, getSetupToken } from "@/lib/setup";
 import { execSync } from "child_process";
 import fs from "fs";
 

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { isInitialized } from "../../lib/setup";
+import { isInitialized } from "@/lib/setup";
 
 export default async function SetupLayout({ children }: { children: ReactNode }) {
   const initialized = await isInitialized();

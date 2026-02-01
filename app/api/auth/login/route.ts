@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../lib/prisma";
-import { createSessionToken, setSessionCookie, verifyPassword } from "../../../../lib/auth";
-import { writeAuditLog } from "../../../../lib/audit";
+import { prisma } from "@/lib/prisma";
+import { createSessionToken, setSessionCookie, verifyPassword } from "@/lib/auth";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   const contentType = request.headers.get("content-type") || "";

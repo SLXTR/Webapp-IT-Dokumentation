@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { Role } from "@prisma/client";
-import { prisma } from "../../../../lib/prisma";
-import { assertSetupAllowed } from "../../../../lib/setup-guard";
-import { hashPassword } from "../../../../lib/auth";
-import { markInitialized } from "../../../../lib/setup";
-import { writeAuditLog } from "../../../../lib/audit";
+import { prisma } from "@/lib/prisma";
+import { assertSetupAllowed } from "@/lib/setup-guard";
+import { hashPassword } from "@/lib/auth";
+import { markInitialized } from "@/lib/setup";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function POST(request: Request) {
   try {

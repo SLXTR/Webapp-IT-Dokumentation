@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Client } from "pg";
-import { assertSetupAllowed } from "../../../../lib/setup-guard";
+import { assertSetupAllowed } from "@/lib/setup-guard";
 
 export async function POST(request: Request) {
   try {

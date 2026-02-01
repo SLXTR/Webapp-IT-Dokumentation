@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../../../../lib/prisma";
-import { getUserRole, requireSession } from "../../../../../../lib/guards";
-import { canAdmin } from "../../../../../../lib/rbac";
+import { prisma } from "@/lib/prisma";
+import { getUserRole, requireSession } from "@/lib/guards";
+import { canAdmin } from "@/lib/rbac";
 
 export async function GET(
   _: Request,

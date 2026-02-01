@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { isInitialized } from "../../lib/setup";
+import { isInitialized } from "@/lib/setup";
 
 export default async function LoginPage() {
   const initialized = await isInitialized();

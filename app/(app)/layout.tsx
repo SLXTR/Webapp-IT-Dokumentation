@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { getSession } from "../../lib/auth";
-import { isInitialized } from "../../lib/setup";
+import { getSession } from "@/lib/auth";
+import { isInitialized } from "@/lib/setup";
 import Sidebar from "../../components/sidebar";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
