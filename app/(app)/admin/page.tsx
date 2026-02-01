@@ -1,7 +1,10 @@
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminPage() {
-  const users = await prisma.user.findMany({
+  const users: Prisma.UserGetPayload<{
+    include: { roles: { include: { customer: true } } };
+  }>[] = await prisma.user.findMany({
     include: { roles: { include: { customer: true } } }
   });
 
@@ -14,7 +17,8 @@ export default async function AdminPage() {
       <div className="notion-card p-6">
         <h2 className="text-lg font-semibold mb-4">Benutzer</h2>
         <div className="space-y-4">
-          {users.map((user) => (
+          {users.map(
+            (user: Prisma.UserGetPayload<{ include: { roles: { include: { customer: true } } } }>) => (
             <div key={user.id} className="rounded-lg border border-neutral-200 p-4">
               <p className="font-medium">{user.name ?? "Ohne Namen"}</p>
               <p className="text-sm text-neutral-500">{user.email}</p>
