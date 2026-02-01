@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getUserRole } from "@/lib/guards";
 import { canRead, canWrite } from "@/lib/rbac";
@@ -17,13 +18,13 @@ export async function GET(
   const page = Number(searchParams.get("page") || 1);
   const pageSize = Number(searchParams.get("pageSize") || 20);
 
-  const where = {
+  const where: Prisma.DeviceWhereInput = {
     customerId: params.id,
     OR: q
       ? [
-          { name: { contains: q, mode: "insensitive" } },
-          { hostname: { contains: q, mode: "insensitive" } },
-          { ip: { contains: q, mode: "insensitive" } }
+          { name: { contains: q, mode: Prisma.QueryMode.insensitive } },
+          { hostname: { contains: q, mode: Prisma.QueryMode.insensitive } },
+          { ip: { contains: q, mode: Prisma.QueryMode.insensitive } }
         ]
       : undefined
   };
