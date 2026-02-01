@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminPage() {
   const users = await prisma.user.findMany({
     include: { roles: { include: { customer: true } } }
