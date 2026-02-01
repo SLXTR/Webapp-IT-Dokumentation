@@ -5,6 +5,7 @@ export default async function AdminPage() {
     include: { roles: { include: { customer: true } } }
   });
   type UserWithRoles = Awaited<typeof users>[number];
+  type RoleWithCustomer = UserWithRoles["roles"][number];
 
   return (
     <div className="space-y-6">
@@ -20,7 +21,7 @@ export default async function AdminPage() {
               <p className="font-medium">{user.name ?? "Ohne Namen"}</p>
               <p className="text-sm text-neutral-500">{user.email}</p>
               <div className="mt-2 text-xs text-neutral-500">
-                {user.roles.map((role) => (
+                {user.roles.map((role: RoleWithCustomer) => (
                   <div key={role.id}>
                     {role.customer.name}: {role.role}
                   </div>
