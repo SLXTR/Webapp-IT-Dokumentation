@@ -66,6 +66,9 @@ npm run seed          # Seeds ausführen
 npm run test          # Tests (Vitest)
 ```
 
+## Produktion (Ubuntu VM + Docker + HTTPS)
+Siehe `deploy/README.md` für ein vollständiges Produktions-Setup mit Docker Compose, lokalem Postgres-Container und Nginx (HTTPS).
+
 ## Tests
 - `tests/rbac.test.ts`: Unit-Tests für RBAC-Regeln
 - `tests/port-link.test.ts`: DB-Integrationstest (läuft nur wenn DATABASE_URL gesetzt ist)
